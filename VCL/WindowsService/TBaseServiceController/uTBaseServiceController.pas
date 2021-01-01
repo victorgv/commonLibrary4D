@@ -2,14 +2,17 @@ unit uTBaseServiceController;
 
 interface
 
-uses Vcl.SvcMgr, Vcl.Forms, Winapi.Windows,System.SysUtils ;
+uses Vcl.SvcMgr, Vcl.Forms, Winapi.Windows,System.SysUtils;
 
 type TBaseServiceController = Class
   private
     _ACTIVO: boolean;
     _Service: TService;
+    FNameService: String;
     // ------
   protected
+    procedure sendEventToLogMessage(const p_message: String; p_EventType: DWord);
+    procedure validateInstanceIsLive; Virtual; Abstract;  // Check our Thread/Threads/Action/Actions, etc... are living
   public
     property Activo: Boolean read _activo;
     // ------
@@ -34,6 +37,9 @@ begin
   // (1) Incializaciones clase
   _ACTIVO := FALSE;
   _Service := p_Service;
+
+  sendEventToLogMessage('ServiceCreate: OK', EVENTLOG_INFORMATION_TYPE);
+
 end;
 
 // --------------------------------------------------------------------------------------
@@ -62,7 +68,7 @@ begin
     ProcesarMensajes;
     if Activo then // Si después del sleep sigue activo
     begin
-      //_chequea_instancias_activas;
+      validateInstanceIsLive;
     end;
   except
     on e: exception do
@@ -94,6 +100,13 @@ begin
   end
   else
     Application.ProcessMessages;
+end;
+
+// ------------------------------------------------------------------------------
+
+procedure TBaseServiceController.sendEventToLogMessage(const p_message: String; p_EventType: DWord);
+begin
+  _Service.LogMessage(p_message,p_EventType); // Log de eventos de windows
 end;
 
 // -----------------------------------------------------------------------------

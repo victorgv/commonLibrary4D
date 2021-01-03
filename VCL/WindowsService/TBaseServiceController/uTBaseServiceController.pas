@@ -11,7 +11,7 @@ type TBaseServiceController = Class
     FNameService: String;
     // ------
   protected
-    procedure sendEventToLogMessage(const p_message: String; p_EventType: DWord);
+    procedure sendEventToLogMessage(const p_message: String; p_EventType: DWord); // Send to Event Viewer
     procedure validateInstanceIsLive; Virtual; Abstract;  // Check our Thread/Threads/Action/Actions, etc... are living
   public
     property Activo: Boolean read _activo;

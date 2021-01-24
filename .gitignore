@@ -70,3 +70,4 @@ modules/
 
 #others
 *.log
+*.res

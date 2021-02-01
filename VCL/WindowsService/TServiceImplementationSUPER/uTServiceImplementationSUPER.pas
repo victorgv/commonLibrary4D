@@ -2,12 +2,13 @@
 
 interface
 
-uses Vcl.SvcMgr, Vcl.Forms, Winapi.Windows,System.SysUtils,System.Classes;
+uses Vcl.SvcMgr, Vcl.Forms, Winapi.Windows,System.SysUtils,System.Classes, System.JSON, uCommon;
 
 type
   TLogMessageProcedure = procedure(const p_Message: String) of object;
 
-type TServiceImplementationSUPER = Class(TThread)
+type
+  TServiceImplementationSUPER = Class(TThread)
   private
     fLogMessage: TLogMessageProcedure;
     _ACTIVO: boolean;
@@ -45,6 +46,7 @@ begin
   // (1) Incializaciones clase
   _ACTIVO := FALSE;
   _Service := p_Service;
+  Initializations;
 
   sendEventToLogMessage('ServiceCreate: OK', EVENTLOG_INFORMATION_TYPE);
 

@@ -1,12 +1,11 @@
-﻿unit MyDelphiLibrary.Utilities;
+﻿unit MyLibrary.General;
 
 interface
 
-uses System.SysUtils, Winapi.Windows;
-
+uses System.SysUtils, Winapi.Windows, System.Classes;
 
 type
-  TUtilsGeneral = Class(TObject)
+  TMyLibraryGeneral = Class(TObject)
   private
     // ------
   protected
@@ -22,28 +21,28 @@ implementation
 
 // -----------------------------------------------------------------------------
 
-constructor TUtilsGeneral.Create;
+constructor TMyLibraryGeneral.Create;
 begin
   inherited create;
 end;
 
 // -----------------------------------------------------------------------------
 
-destructor TUtilsGeneral.Destroy;
+destructor TMyLibraryGeneral.Destroy;
 begin
   inherited;
 end;
 
 // -----------------------------------------------------------------------------
 
-class function TUtilsGeneral.getFileEXEorDLLVersion: string;
+class function TMyLibraryGeneral.getFileEXEorDLLVersion: string;
 begin
-  result := 'HOLA'; //getFileEXEorDLLVersion(ParamStr(0));
+  result := getFileEXEorDLLVersion(ParamStr(0));
 end;
 
 // -----------------------------------------------------------------------------
 
-class function TUtilsGeneral.getFileEXEorDLLVersion(const p_file: string): string;
+class function TMyLibraryGeneral.getFileEXEorDLLVersion(const p_file: string): string;
 var
   Size, Handle: DWORD;
   Buffer: TBytes;

@@ -13,6 +13,7 @@ type
   public
     class procedure trimSpacesOnEachLINE(p_strings: TStringList); overload;
     class procedure trimSpacesOnEachLINE(var p_strings: string); overload;
+    class procedure trimBlankLinesAboveBelow(p_strings: TStringList);
 End;
 
 
@@ -20,6 +21,23 @@ implementation
 
 
 // -----------------------------------------------------------------------------
+
+class procedure TMyLibraryStringUtil.trimBlankLinesAboveBelow(p_strings: TStringList);
+begin
+  if p_strings.Count > 0 then
+  begin
+    // Delete Above
+    while p_strings.Strings[0].Trim = '' do
+      p_strings.Delete(0);
+
+    // Delete below
+    while p_strings.Strings[p_strings.Count-1].Trim = '' do
+      p_strings.Delete(p_strings.Count-1);
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
 
 class procedure TMyLibraryStringUtil.trimSpacesOnEachLINE(var p_strings: string);
 var

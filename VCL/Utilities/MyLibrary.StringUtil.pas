@@ -11,6 +11,7 @@ type
     // ------
   protected
   public
+    class function getLineStatedByREGEX(const p_regex: string; p_tmpTextMessage: TStringList; p_initial_line: Integer): Integer;
     class procedure trimSpacesOnEachLINE(p_strings: TStringList); overload;
     class procedure trimSpacesOnEachLINE(var p_strings: string); overload;
     class procedure trimBlankLinesAboveBelow(p_strings: TStringList);
@@ -19,8 +20,24 @@ End;
 
 implementation
 
+uses
+  System.RegularExpressions;
+
 
 // -----------------------------------------------------------------------------
+// Search line started by "p_regex", return line number
+class function TMyLibraryStringUtil.getLineStatedByREGEX(const p_regex: string; p_tmpTextMessage: TStringList; p_initial_line: Integer): Integer;
+var
+  i: integer;
+begin
+  result := -1;
+  for i := p_initial_line to p_tmpTextMessage.Count - 1 do
+    if TRegEx.IsMatch(p_tmpTextMessage.Strings[i], p_regex) then
+    begin
+      result := i;
+      break;
+    end;
+end;
 
 class procedure TMyLibraryStringUtil.trimBlankLinesAboveBelow(p_strings: TStringList);
 begin

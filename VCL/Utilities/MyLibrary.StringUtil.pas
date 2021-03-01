@@ -11,7 +11,7 @@ type
     // ------
   protected
   public
-    class function getLineStatedByREGEX(const p_regex: string; p_tmpTextMessage: TStringList; p_initial_line: Integer): Integer;
+    class function getLineStartedByREGEX(const p_regex: string; p_tmpTextMessage: TStringList; p_initial_line: Integer): Integer;
     class procedure trimSpacesOnEachLINE(p_strings: TStringList); overload;
     class procedure trimSpacesOnEachLINE(var p_strings: string); overload;
     class procedure trimBlankLinesAboveBelow(p_strings: TStringList);
@@ -25,8 +25,8 @@ uses
 
 
 // -----------------------------------------------------------------------------
-// Search line started by "p_regex", return line number
-class function TMyLibraryStringUtil.getLineStatedByREGEX(const p_regex: string; p_tmpTextMessage: TStringList; p_initial_line: Integer): Integer;
+// Search line started by "p_regex", return line number. Returns -1 if "p_regex" doesn't found
+class function TMyLibraryStringUtil.getLineStartedByREGEX(const p_regex: string; p_tmpTextMessage: TStringList; p_initial_line: Integer): Integer;
 var
   i: integer;
 begin
@@ -38,6 +38,8 @@ begin
       break;
     end;
 end;
+
+// -----------------------------------------------------------------------------
 
 class procedure TMyLibraryStringUtil.trimBlankLinesAboveBelow(p_strings: TStringList);
 begin

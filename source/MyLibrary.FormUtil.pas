@@ -2,7 +2,7 @@
 
 interface
 
-uses System.SysUtils, Winapi.Windows, System.Classes,
+uses System.SysUtils,  System.Classes,
      FMX.Forms, FMX.TabControl, System.UITypes;
 
 
@@ -46,7 +46,7 @@ implementation
 
 { TMyLibraryFormBase_MDI_Tabbed }
 
-uses uFmxUsers;
+uses uFmxUsers, uFmxMain;
 
 // Check if form already exist if then return the index of position on de TabsArray, if not returns -1
 function TMyLibraryFormBase_MDI_Tabbed.checkFormIsAlreadyOpen(p_formClass: TClassOfForm): integer;
@@ -76,7 +76,8 @@ begin
     getTabControl.ActiveTab := TabsArray[i].TabItem;
     TabsArray[i].TabItem.AutoSize:= False;
     TabsArray[i].TabForm:= p_formClass.Create(TabsArray[Length(TabsArray) - 1].TabItem);
-    TfmxUsers(TabsArray[i].TabForm).Layout1.Parent := TabsArray[i].TabItem;
+    //TfmxUsers(TabsArray[i].TabForm).Layout1.Parent := TabsArray[i].TabItem;
+    TfmxUsers(TabsArray[i].TabForm).Parent := TabsArray[i].TabItem;
     //TabsArray[i].TabForm.Show;
   end;
 

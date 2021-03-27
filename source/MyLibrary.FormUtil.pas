@@ -8,14 +8,14 @@ uses System.SysUtils,  System.Classes,
 
 
 type
-  TMyLibraryFormBase = Class(TForm)
+  TMyLibrary_FormBase = Class(TForm)
   private
     // ------
   protected
   public
 End;
 
-type TClassOfForm = class of TMyLibraryFormBase;
+type TMyLibrary_ClassOfForm = class of TMyLibrary_FormBase;
 
 Type
   TMyLibraryTabsArrayRecord = array of record
@@ -28,16 +28,16 @@ Type
   end;
 
 type
-  TMyLibraryFormBase_MDI_Tabbed = Class(TMyLibraryFormBase)
+  TMyLibrary_MainFormBase_Tabbed = Class(TMyLibrary_FormBase)
   private
     FTabsArray: TMyLibraryTabsArrayRecord;
     //
-    function checkFormIsAlreadyOpen(p_formClass: TClassOfForm): integer;
+    function checkFormIsAlreadyOpen(p_formClass: TMyLibrary_ClassOfForm): integer;
   protected
     function getTabControl: TTabControl; virtual; abstract;
   public
     property TabsArray: TMyLibraryTabsArrayRecord read FTabsArray;
-    procedure CallForm(p_formClass: TClassOfForm; p_swiCanRepeat: boolean = FALSE);
+    procedure CallForm(p_formClass: TMyLibrary_ClassOfForm; p_swiCanRepeat: boolean = FALSE);
   end;
 
 
@@ -49,7 +49,7 @@ implementation
 uses uFmxUsers, uFmxMain;
 
 // Check if form already exist if then return the index of position on de TabsArray, if not returns -1
-function TMyLibraryFormBase_MDI_Tabbed.checkFormIsAlreadyOpen(p_formClass: TClassOfForm): integer;
+function TMyLibrary_MainFormBase_Tabbed.checkFormIsAlreadyOpen(p_formClass: TMyLibrary_ClassOfForm): integer;
 begin
 
   // TO-DO
@@ -58,7 +58,7 @@ begin
 end;
 
 
-procedure TMyLibraryFormBase_MDI_Tabbed.CallForm(p_formClass: TClassOfForm; p_swiCanRepeat: boolean);
+procedure TMyLibrary_MainFormBase_Tabbed.CallForm(p_formClass: TMyLibrary_ClassOfForm; p_swiCanRepeat: boolean);
 var
   i: integer;
 begin

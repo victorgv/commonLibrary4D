@@ -11,6 +11,8 @@ type
     { Private declarations }
   public
     { Public declarations }
+    function ApplicationNAME: string; virtual; abstract;
+    function ApplicationCODE: string; virtual; abstract;
   end;
 
 var

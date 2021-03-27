@@ -1,4 +1,4 @@
-object FmxBaseLogin: TFmxBaseLogin
+object MyLibrary_FormLogin: TMyLibrary_FormLogin
   Left = 0
   Top = 0
   Caption = 'Form1'

@@ -1,4 +1,4 @@
-unit uFmxBaseLogin;
+unit MyLibrary.FormLogin;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   FMX.Objects, FMX.Controls.Presentation, FMX.Edit, FMX.Layouts;
 
 type
-  TFmxBaseLogin = class(TMyLibraryFormBase)
+  TMyLibrary_FormLogin = class(TMyLibraryFormBase)
     la_header: TLayout;
     FormLayout: TLayout;
     UsernameEdit: TEdit;
@@ -27,7 +27,7 @@ type
   end;
 
 var
-  FmxBaseLogin: TFmxBaseLogin;
+  MyLibrary_FormLogin: TMyLibrary_FormLogin;
 
 implementation
 

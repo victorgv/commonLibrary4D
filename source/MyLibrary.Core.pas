@@ -2,7 +2,7 @@ unit MyLibrary.Core;
 
 interface
 
-uses MyLibrary.FormLogin, System.Classes, MyLibrary.Session;
+uses MyLibrary.FormLogin, System.Classes, MyLibrary.Session, FMX.Forms;
 
 type
   TMyLibrary = class
@@ -36,7 +36,12 @@ var
 begin
   formInstance := p_LoginFormClass.Create(nil);
   try
-    formInstance.show;
+    formInstance.RunFormAsModal(procedure()  // Modal http://docwiki.embarcadero.com/RADStudio/Sydney/en/Using_FireMonkey_Modal_Dialog_Boxes
+      begin
+
+      end
+    );
+    //***Application.mainform := formInstance;
 
   finally
     formInstance.free;

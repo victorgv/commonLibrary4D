@@ -9,18 +9,26 @@ uses System.SysUtils,  System.Classes,
 
 type
   TMyLibrary_FormBase = Class(TForm)
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     // ------
+    FSuccProc: TProc;
   protected
+
   public
-End;
+    procedure RunFormAsModal(const SuccProc: TProc);
+    //
+    constructor create(aowner: TComponent); virtual;
+  end;
+
+// --------------------------------------------------------------------------------------------
 
 type TMyLibrary_ClassOfForm = class of TMyLibrary_FormBase;
 
 Type
   TMyLibraryTabsArrayRecord = array of record
     TabItem: TTabItem;
-    TabForm: TForm;
+    TabForm: TMyLibrary_FormBase;
     ActiveFormTabByClass: TClass;
     IsbtnMenuVisible: Boolean;
     IsbtnBackVisible: Boolean;
@@ -37,7 +45,7 @@ type
     function getTabControl: TTabControl; virtual; abstract;
   public
     property TabsArray: TMyLibraryTabsArrayRecord read FTabsArray;
-    procedure CallForm(p_formClass: TMyLibrary_ClassOfForm; p_swiCanRepeat: boolean = FALSE);
+    procedure RunFormAsTab(p_formClass: TMyLibrary_ClassOfForm; p_swiCanRepeat: boolean = FALSE);
   end;
 
 
@@ -58,7 +66,7 @@ begin
 end;
 
 
-procedure TMyLibrary_MainFormBase_Tabbed.CallForm(p_formClass: TMyLibrary_ClassOfForm; p_swiCanRepeat: boolean);
+procedure TMyLibrary_MainFormBase_Tabbed.RunFormAsTab(p_formClass: TMyLibrary_ClassOfForm; p_swiCanRepeat: boolean);
 var
   i: integer;
 begin
@@ -75,11 +83,39 @@ begin
     //TabsArray[i].TabItem.TabControl := getTabControl;
     getTabControl.ActiveTab := TabsArray[i].TabItem;
     TabsArray[i].TabItem.AutoSize:= False;
-    TabsArray[i].TabForm:= p_formClass.Create(TabsArray[Length(TabsArray) - 1].TabItem);
-    //TfmxUsers(TabsArray[i].TabForm).Layout1.Parent := TabsArray[i].TabItem;
-    TfmxUsers(TabsArray[i].TabForm).Parent := TabsArray[i].TabItem;
+    TabsArray[i].TabForm:= p_formClass.Create(TabsArray[i].TabItem);
+    TfmxUsers(TabsArray[i].TabForm).Layout1.Parent := TabsArray[i].TabItem;
+    //TfmxUsers(TabsArray[i].TabForm).Parent := TabsArray[i].TabItem;
     //TabsArray[i].TabForm.Show;
   end;
+
+end;
+
+{ TMyLibrary_FormBase }
+
+constructor TMyLibrary_FormBase.create(aowner: TComponent);
+begin
+  inherited;
+  FSuccProc := NIL;
+end;
+
+procedure TMyLibrary_FormBase.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if Assigned(FSuccProc) then
+  begin
+    FSuccProc();
+    FSuccProc:= nil;
+  end;
+end;
+
+procedure TMyLibrary_FormBase.RunFormAsModal(const SuccProc: TProc);
+begin
+  FSuccProc:= SuccProc;
+  {$IF DEFINED(Win64) or DEFINED(Win32)}
+  ShowModal;
+  {$ELSE}
+  Self.Show;
+  {$ENDIF}
 
 end;
 

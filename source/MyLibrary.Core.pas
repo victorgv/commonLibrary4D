@@ -44,7 +44,7 @@ begin
     //***Application.mainform := formInstance;
 
   finally
-    formInstance.free;
+    // formInstance.free; *** It must have caFree
   end;
 end;
 

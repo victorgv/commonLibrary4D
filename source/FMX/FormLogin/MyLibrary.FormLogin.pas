@@ -5,21 +5,19 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, MyLibrary.FormUtil,
-  FMX.Objects, FMX.Controls.Presentation, FMX.Edit, FMX.Layouts;
+  FMX.Objects, FMX.Controls.Presentation, FMX.Edit, FMX.Layouts, FMX.StdCtrls;
 
 type
   TMyLibrary_FormLogin = class(TMyLibrary_FormBase)
     la_header: TLayout;
-    FormLayout: TLayout;
-    UsernameEdit: TEdit;
-    UsernameUnderLine: TLine;
-    UserImage: TImage;
-    PasswordEdit: TEdit;
-    PasswordUnderLine: TLine;
-    LockImage: TImage;
-    LoginRectBTN: TRectangle;
-    LoginButtonText: TText;
     TitleText: TText;
+    Layout1: TLayout;
+    ed_username: TEdit;
+    ed_password: TEdit;
+    Rectangle1: TRectangle;
+    sb_doLogin: TSpeedButton;
+    Layout2: TLayout;
+    sb_Forgot_Password: TSpeedButton;
     procedure LoginButtonTextClick(Sender: TObject);
   private
     { Private declarations }

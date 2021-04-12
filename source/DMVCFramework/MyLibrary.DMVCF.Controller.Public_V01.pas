@@ -7,21 +7,25 @@ uses
 
 type
 
-  [MVCPath('/api')]
+  [MVCPath('/api/public_v01')]
   TMyLibrary_DMVCF_Controller_Public = class(TMVCController)
+  protected
+    procedure OnBeforeAction(Context: TWebContext; const AActionName: string; var Handled: Boolean); override;
+    procedure OnAfterAction(Context: TWebContext; const AActionName: string); override;
   public
     [MVCPath]
     [MVCHTTPMethod([httpGET])]
     procedure Index;
 
+    [MVCPath('/ping')]
+    [MVCHTTPMethod([httpGET])]
+    procedure Ping;
+
+
     [MVCPath('/reversedstrings/($Value)')]
     [MVCHTTPMethod([httpGET])]
     procedure GetReversedString(const Value: String);
-  protected
-    procedure OnBeforeAction(Context: TWebContext; const AActionName: string; var Handled: Boolean); override;
-    procedure OnAfterAction(Context: TWebContext; const AActionName: string); override;
 
-  public
     //Sample CRUD Actions for a "Customer" entity
     [MVCPath('/customers')]
     [MVCHTTPMethod([httpGET])]
@@ -56,6 +60,11 @@ begin
   Render('Hello DelphiMVCFramework World');
 end;
 
+procedure TMyLibrary_DMVCF_Controller_Public.Ping;
+begin
+  Render('Pong');
+end;
+
 procedure TMyLibrary_DMVCF_Controller_Public.GetReversedString(const Value: String);
 begin
   Render(System.StrUtils.ReverseString(Value.Trim));
@@ -74,6 +83,8 @@ begin
     action will not be called }
   inherited;
 end;
+
+
 
 //Sample CRUD Actions for a "Customer" entity
 procedure TMyLibrary_DMVCF_Controller_Public.GetCustomers;

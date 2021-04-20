@@ -21,6 +21,10 @@ type
     [MVCHTTPMethod([httpGET])]
     procedure Ping;
 
+    [MVCPath('/validate_user')]
+    [MVCHTTPMethod([httpPOST])]
+    procedure validate_user;
+
 
     [MVCPath('/reversedstrings/($Value)')]
     [MVCHTTPMethod([httpGET])]
@@ -106,6 +110,11 @@ end;
 procedure TMyLibrary_DMVCF_Controller_Public.UpdateCustomer(id: Integer);
 begin
   //todo: update customer by id
+end;
+
+procedure TMyLibrary_DMVCF_Controller_Public.validate_user;
+begin
+
 end;
 
 procedure TMyLibrary_DMVCF_Controller_Public.DeleteCustomer(id: Integer);

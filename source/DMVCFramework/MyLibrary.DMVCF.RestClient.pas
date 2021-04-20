@@ -13,7 +13,7 @@ type
     procedure WebModuleDestroy(Sender: TObject);
 
   private
-    fMVC: TMVCEngine;
+    MVC: TMVCEngine;
 
   public
     { Public declarations }
@@ -28,29 +28,13 @@ implementation
 
 
 uses
-  System.DateUtils,
   MyLibrary.DMVCF.Controller.Public_V01,
   MVCFramework.Commons,
-  MVCFramework.Middleware.StaticFiles,
-  MVCFramework.Middleware.Authentication,
-  MyLibrary.DMVCF.AuthenticationHandler,
-  MVCFramework.Middleware.JWT,
-  MVCFramework.JWT;
+  MVCFramework.Middleware.StaticFiles;
 
 procedure TMyLibrary_DMVCF_WebModule.WebModuleCreate(Sender: TObject);
-var
-  lClaimsSetup: TJWTClaimsSetup;
 begin
-  lClaimsSetup := procedure(const JWT: TJWT)
-    begin
-      JWT.Claims.Issuer := 'MyLibrary JSON Web Token';
-      JWT.Claims.ExpirationTime := Now + OneHour; // valid for 1 hour
-      JWT.Claims.NotBefore := Now - OneMinute * 5; // valid since 5 minutes ago
-      JWT.Claims.IssuedAt := Now;
-      JWT.CustomClaims['mycustomvalue'] := 'hello there';
-    end;
-  // ----------------------------------------------------------------------------
-  fMVC := TMVCEngine.Create(Self,
+  MVC := TMVCEngine.Create(Self,
     procedure(Config: TMVCConfig)
     begin
       // session timeout (0 means session cookie)
@@ -75,18 +59,19 @@ begin
       Config[TMVCConfigKey.ExposeXPoweredBy] := 'true';
       // Max request size in bytes
       Config[TMVCConfigKey.MaxRequestSize] := IntToStr(TMVCConstants.DEFAULT_MAX_REQUEST_SIZE);
-    end);
-  // ----------------------------------------------------------------------------
-  fMVC.AddController(TMyLibrary_DMVCF_Controller_Public);
-  fMVC.AddMiddleware(TMVCJWTAuthenticationMiddleware.Create(
-     TMyLibrary_AuthenticationHandler.Create, '3d3ew2ssAr', '/login', lClaimsSetup, [TJWTCheckableClaim.ExpirationTime, TJWTCheckableClaim.NotBefore, TJWTCheckableClaim.IssuedAt], 300)
-  );
 
+
+    end);
+
+  // MVC.AddMiddleware(TMVCStaticFilesMiddleware.Create('/app', '.\www\public_html')); // Web files
+  // MVC.AddMiddleware(TMVCStaticFilesMiddleware.Create('/images', '.\www\public_images', 'database.png')); // Image files
+
+  MVC.AddController(TMyLibrary_DMVCF_Controller_Public);
 end;
 
 procedure TMyLibrary_DMVCF_WebModule.WebModuleDestroy(Sender: TObject);
 begin
-  fMVC.free;
+  MVC.free;
 end;
 
 end.

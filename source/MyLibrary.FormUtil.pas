@@ -12,11 +12,11 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     // ------
-    FSuccProc: TProc;
+    FSuccProc: TProc<TModalResult>;
   protected
 
   public
-    procedure RunFormAsModal(const SuccProc: TProc);
+    procedure RunFormAsModal(const ResultProc: TProc<TModalResult>);
     //
     constructor create(aowner: TComponent); virtual;
   end;
@@ -103,14 +103,14 @@ procedure TMyLibrary_FormBase.FormClose(Sender: TObject; var Action: TCloseActio
 begin
   if Assigned(FSuccProc) then
   begin
-    FSuccProc();
+    FSuccProc(ModalResult);
     FSuccProc:= nil;
   end;
 end;
 
-procedure TMyLibrary_FormBase.RunFormAsModal(const SuccProc: TProc);
+procedure TMyLibrary_FormBase.RunFormAsModal(const ResultProc: TProc<TModalResult>);
 begin
-  FSuccProc:= SuccProc;
+  FSuccProc:= ResultProc;
   {$IF DEFINED(Win64) or DEFINED(Win32)}
   ShowModal;
   {$ELSE}

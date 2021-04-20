@@ -22,6 +22,9 @@ var MyLibrary_MASTER: TMyLibrary;
 
 implementation
 
+uses
+  System.UITypes;
+
 { TMyLibrary }
 
 constructor TMyLibrary.create;
@@ -33,18 +36,19 @@ end;
 function TMyLibrary.DoLogin(p_LoginFormClass: TMyLibrary_ClassFormLogin): boolean;
 var
   formInstance: TMyLibrary_FormLogin;
+  return_value: boolean;
 begin
   formInstance := p_LoginFormClass.Create(nil);
   try
-    formInstance.RunFormAsModal(procedure()  // Modal http://docwiki.embarcadero.com/RADStudio/Sydney/en/Using_FireMonkey_Modal_Dialog_Boxes
+    formInstance.RunFormAsModal(procedure(ModalResult: TModalResult)  // Modal http://docwiki.embarcadero.com/RADStudio/Sydney/en/Using_FireMonkey_Modal_Dialog_Boxes
       begin
-
+        return_value := ModalResult = mrOk;
       end
     );
-    //***Application.mainform := formInstance;
-
+    result := return_value;
   finally
     // formInstance.free; *** It must have caFree
+    result := false;
   end;
 end;
 

@@ -66,12 +66,13 @@ object MyLibrary_FormLogin: TMyLibrary_FormLogin
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = claGray
-      object sb_doLogin: TSpeedButton
+      object sb_Login: TSpeedButton
         Align = Client
         Size.Width = 440.000000000000000000
         Size.Height = 50.000000000000000000
         Size.PlatformDefault = False
         Text = 'Login'
+        OnClick = sb_LoginClick
       end
     end
   end

@@ -19,11 +19,14 @@ type
     sb_Login: TSpeedButton;
     Layout2: TLayout;
     sb_Forgot_Password: TSpeedButton;
+    Image1: TImage;
+    LA_INFO: TLabel;
     procedure sb_LoginClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    constructor create(aowner: TComponent); virtual;
   end;
 
 type TMyLibrary_ClassFormLogin = class of TMyLibrary_FormLogin;
@@ -40,6 +43,12 @@ uses MyLibrary.Core,
 
 
 
+constructor TMyLibrary_FormLogin.create(aowner: TComponent);
+begin
+  inherited;
+  LA_INFO.Text := '';
+end;
+
 procedure TMyLibrary_FormLogin.sb_LoginClick(Sender: TObject);
 var
   vClientClt: IMVCRESTClient;
@@ -47,9 +56,24 @@ var
   vJSON: TJSONObject;
   vJWT_Token: string;
 begin
-  vClientClt := TMVCRESTClient.New.BaseURL('http://localhost', 8080);
+  vClientClt := TMVCRESTClient.New.BaseURL('http://192.168.1.16', 8080);
   vResponse := vClientClt.Post('/login', '{"jwtusername":"'+ed_username.Text+'","jwtpassword":"'+ed_password.Text+'"}');
-  if not vResponse.Success then
+
+  if vResponse.Success then
+  begin
+    vJSON := TSystemJSON.StringAsJSONObject(vResponse.Content);
+    try
+      vJWT_Token := vJSON.GetValue('token').Value;
+    finally
+      vJSON.Free;
+    end;
+    MyLibrary_MASTER.newSession(vJWT_Token);
+    LA_INFO.StyledSettings := LA_INFO.StyledSettings - [TStyledSetting.ssFontColor];
+    LA_INFO.TextSettings.FontColor := TAlphaColorRec.Darkgreen;
+    LA_INFO.Text := 'successful login';
+    close;
+  end
+  else
   begin
     ShowMessage(
       'HTTP ERROR: ' + vResponse.StatusCode.ToString + sLineBreak +
@@ -58,15 +82,6 @@ begin
     Exit;
   end;
 
-  vJSON := TSystemJSON.StringAsJSONObject(vResponse.Content);
-  try
-    vJWT_Token := vJSON.GetValue('token').Value;
-  finally
-    vJSON.Free;
-  end;
-
-
-  MyLibrary_MASTER.newSession(vJWT_Token);
 end;
 
 

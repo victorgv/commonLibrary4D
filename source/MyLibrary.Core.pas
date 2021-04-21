@@ -11,7 +11,7 @@ type
   public
     function DoLogin(p_LoginFormClass: TMyLibrary_ClassFormLogin): boolean;
 
-    procedure newSession;
+    procedure newSession(const p_JWT_Token: string);
     //
     property Session: TMyLibrary_Session read fSession;
     //
@@ -52,9 +52,9 @@ begin
   end;
 end;
 
-procedure TMyLibrary.newSession;
+procedure TMyLibrary.newSession(const p_JWT_Token: string);
 begin
-  fSession := TMyLibrary_Session.Create;
+  fSession := TMyLibrary_Session.Create(p_JWT_Token);
 end;
 
 initialization

@@ -56,8 +56,8 @@ var
   vJSON: TJSONObject;
   vJWT_Token: string;
 begin
-  vClientClt := TMVCRESTClient.New.BaseURL('http://192.168.1.16', 8080);
-  vResponse := vClientClt.Post('/login', '{"jwtusername":"'+ed_username.Text+'","jwtpassword":"'+ed_password.Text+'"}');
+  //vClientClt := TMVCRESTClient.New.BaseURL('http://192.168.1.16', 8080);
+  vResponse := MyLibrary_.RestConnection.ProxiedPost('/login', '{"jwtusername":"'+ed_username.Text+'","jwtpassword":"'+ed_password.Text+'"}');
 
   if vResponse.Success then
   begin
@@ -67,10 +67,10 @@ begin
     finally
       vJSON.Free;
     end;
-    MyLibrary_MASTER.newSession(vJWT_Token);
+    MyLibrary_.newSession(vJWT_Token);
     LA_INFO.StyledSettings := LA_INFO.StyledSettings - [TStyledSetting.ssFontColor];
     LA_INFO.TextSettings.FontColor := TAlphaColorRec.Darkgreen;
-    LA_INFO.Text := 'successful login';
+    LA_INFO.Text := MyLibrary_.UserStrings.getString('ML00001'); // successful login
     close;
   end
   else

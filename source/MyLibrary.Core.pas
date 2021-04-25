@@ -2,23 +2,34 @@ unit MyLibrary.Core;
 
 interface
 
-uses MyLibrary.FormLogin, System.Classes, MyLibrary.Session, FMX.Forms;
+uses MyLibrary.FormLogin,
+     System.Classes,
+     MyLibrary.Session,
+     FMX.Forms,
+     MyLibrary.DMVCF.Connection,
+     MyLibrary.UserLanguageStrings;
 
 type
   TMyLibrary = class
   private
     fSession: TMyLibrary_Session;
+    fRestConnection: TMyLibrary_ProxyRestClient;
+    fUserStrings: TMyLibrary_UserLanguageStrings;
   public
     function DoLogin(p_LoginFormClass: TMyLibrary_ClassFormLogin): boolean;
+
 
     procedure newSession(const p_JWT_Token: string);
     //
     property Session: TMyLibrary_Session read fSession;
+    property RestConnection:TMyLibrary_ProxyRestClient read fRestConnection;
+    property UserStrings: TMyLibrary_UserLanguageStrings read fUserStrings;
     //
     constructor create;
+    destructor destroy;
   end;
 
-var MyLibrary_MASTER: TMyLibrary;
+var MyLibrary_: TMyLibrary;
 
 implementation
 
@@ -30,7 +41,16 @@ uses
 constructor TMyLibrary.create;
 begin
   inherited;
+  fRestConnection := TMyLibrary_ProxyRestClient.create;
   fSession := NIL;
+  fUserStrings := TMyLibrary_UserLanguageStrings.create(lgEnglish);
+end;
+
+destructor TMyLibrary.destroy;
+begin
+  fRestConnection.Free;
+  fUserStrings.Free;
+  inherited;
 end;
 
 function TMyLibrary.DoLogin(p_LoginFormClass: TMyLibrary_ClassFormLogin): boolean;
@@ -58,10 +78,10 @@ begin
 end;
 
 initialization
-  MyLibrary_MASTER := TMyLibrary.Create;
+  MyLibrary_ := TMyLibrary.Create;
 
 finalization
-  MyLibrary_MASTER.Free;
+  MyLibrary_.Free;
 
 
 end.

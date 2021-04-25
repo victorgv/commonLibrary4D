@@ -3,7 +3,7 @@ unit MyLibrary.DataModuleMain;
 interface
 
 uses
-  System.SysUtils, System.Classes;
+  System.SysUtils, System.Classes, FMX.Types;
 
 type
   TMyLibrary_DataModuleMain = class(TDataModule)

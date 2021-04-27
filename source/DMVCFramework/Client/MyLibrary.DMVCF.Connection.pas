@@ -17,6 +17,7 @@ type
     fRestClient: IMVCRESTClient;
 
     procedure changeToNextServer;
+    procedure manageConnectionException(p_response: IMVCRESTResponse);
   public
     { Public declarations }
     // Methods that are proxied
@@ -28,6 +29,19 @@ type
     destructor destroy; virtual;
   end;
 
+type
+   EMyLibrary_Connection = class(Exception)
+   private
+    fCODE: String;
+    fMessage: String;
+    fAditionalInfo: String;
+   public
+     property CODE: String read fCODE;
+     property Message: string read FMessage;
+     property AditionalInfo: string read fAditionalInfo;
+
+     constructor create(const p_CODE, p_Message, p_AditionalInfo: string);
+   end;
 
 implementation
 
@@ -71,14 +85,36 @@ begin
   inherited;
 end;
 
+// If NOT response.success
+procedure TMyLibrary_ProxyRestClient.manageConnectionException(
+  p_response: IMVCRESTResponse);
+begin
+
+end;
+
 function TMyLibrary_ProxyRestClient.ProxiedPost(const aResource, aBody, aContentType: string): IMVCRESTResponse;
 begin
   try
     result := fRestClient.Post(aResource, aBody, aContentType);
   except
-    changeToNextServer;
-    raise;
+    on E: Exception do
+    begin
+{          ShowMessage(
+      'HTTP ERROR: ' + vResponse.StatusCode.ToString + sLineBreak +
+      'HTTP ERROR MESSAGE: ' + vResponse.StatusText + sLineBreak +
+      'ERROR MESSAGE: ' + vResponse.Content);
+    Exit;
+      changeToNextServer;  }
+      raise;
+    end;
   end;
+end;
+
+{ EMyLibrary_Connection }
+
+constructor EMyLibrary_Connection.create(const p_CODE, p_Message, p_AditionalInfo: string);
+begin
+
 end;
 
 end.

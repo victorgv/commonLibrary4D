@@ -24,6 +24,7 @@ type
     procedure sb_LoginClick(Sender: TObject);
   private
     { Private declarations }
+    function validate_fields: boolean; // Just if username are inform, etc
   public
     { Public declarations }
     constructor create(aowner: TComponent); virtual;
@@ -47,6 +48,7 @@ constructor TMyLibrary_FormLogin.create(aowner: TComponent);
 begin
   inherited;
   LA_INFO.Text := '';
+  ed_username.SetFocus;
 end;
 
 procedure TMyLibrary_FormLogin.sb_LoginClick(Sender: TObject);
@@ -56,34 +58,48 @@ var
   vJSON: TJSONObject;
   vJWT_Token: string;
 begin
-  //vClientClt := TMVCRESTClient.New.BaseURL('http://192.168.1.16', 8080);
-  vResponse := MyLibrary_.RestConnection.ProxiedPost('/login', '{"jwtusername":"'+ed_username.Text+'","jwtpassword":"'+ed_password.Text+'"}');
-
-  if vResponse.Success then
+  if validate_fields then
   begin
-    vJSON := TSystemJSON.StringAsJSONObject(vResponse.Content);
-    try
-      vJWT_Token := vJSON.GetValue('token').Value;
-    finally
-      vJSON.Free;
+    vResponse := MyLibrary_.RestConnection.ProxiedPost('/login', '{"jwtusername":"'+ed_username.Text+'","jwtpassword":"'+ed_password.Text+'"}');
+
+    if vResponse.Success then
+    begin
+      vJSON := TSystemJSON.StringAsJSONObject(vResponse.Content);
+      try
+        vJWT_Token := vJSON.GetValue('token').Value;
+      finally
+        vJSON.Free;
+      end;
+      MyLibrary_.newSession(vJWT_Token);
+      LA_INFO.StyledSettings := LA_INFO.StyledSettings - [TStyledSetting.ssFontColor];
+      LA_INFO.TextSettings.FontColor := TAlphaColorRec.Darkgreen;
+      LA_INFO.Text := MyLibrary_.UserStrings.getString('ML00001'); // successful login
+      close;
     end;
-    MyLibrary_.newSession(vJWT_Token);
-    LA_INFO.StyledSettings := LA_INFO.StyledSettings - [TStyledSetting.ssFontColor];
-    LA_INFO.TextSettings.FontColor := TAlphaColorRec.Darkgreen;
-    LA_INFO.Text := MyLibrary_.UserStrings.getString('ML00001'); // successful login
-    close;
-  end
-  else
-  begin
-    ShowMessage(
-      'HTTP ERROR: ' + vResponse.StatusCode.ToString + sLineBreak +
-      'HTTP ERROR MESSAGE: ' + vResponse.StatusText + sLineBreak +
-      'ERROR MESSAGE: ' + vResponse.Content);
-    Exit;
   end;
-
 end;
 
 
+// Just if username are inform, etc
+function TMyLibrary_FormLogin.validate_fields: boolean;
+begin
+  if ed_username.Text.Trim.Length = 0 then
+  begin
+    result := false;
+    LA_INFO.TextSettings.FontColor := TAlphaColorRec.Red;
+    LA_INFO.Text := MyLibrary_.UserStrings.getString('ML00004');
+    ed_username.SetFocus;
+  end
+  else if ed_password.Text.Trim.Length = 0 then
+  begin
+    result := false;
+    LA_INFO.TextSettings.FontColor := TAlphaColorRec.Red;
+    LA_INFO.Text := MyLibrary_.UserStrings.getString('ML00005');
+    ed_password.SetFocus;
+  end;
+
+
+
+end;
 
 end.

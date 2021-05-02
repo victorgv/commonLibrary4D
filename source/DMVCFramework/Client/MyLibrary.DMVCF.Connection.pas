@@ -17,7 +17,8 @@ type
     fRestClient: IMVCRESTClient;
 
     procedure changeToNextServer;
-    procedure manageConnectionException(p_response: IMVCRESTResponse);
+    procedure manageConnectionResponseNotSuccess_and_Raise(const aResource: string; p_response: IMVCRESTResponse);
+    procedure manageConnectionException_and_Raise(const aResource: string; e: Exception);
   public
     { Public declarations }
     // Methods that are proxied
@@ -52,6 +53,8 @@ implementation
 
 { TMyLibrary_ProxyRestClient }
 
+uses MyLibrary.Core;
+
 procedure TMyLibrary_ProxyRestClient.changeToNextServer;
 var
   i: integer;
@@ -85,26 +88,64 @@ begin
   inherited;
 end;
 
-// If NOT response.success
-procedure TMyLibrary_ProxyRestClient.manageConnectionException(
-  p_response: IMVCRESTResponse);
+procedure TMyLibrary_ProxyRestClient.manageConnectionException_and_Raise(const aResource: string; e: Exception);
+var
+  v_CODE: string;
+  v_Message: string;
+  v_AditionalInfo: string;
 begin
+  v_AditionalInfo := 'MESSAGE: ' + e.Message;
+  //
+  if aResource = 'XXXX' then
+  begin
+    v_code := 'ML00XXX'; // to-do?
+    v_Message := '???';
+  end
+  else
+  begin
+    v_code := 'ML00003'; // Something went wrong
+    v_Message := MyLibrary_.UserStrings.getString(v_code);
+  end;
+  //
+  raise EMyLibrary_Connection.create(v_CODE, v_Message, v_AditionalInfo);
+end;
 
+// If NOT response.success
+procedure TMyLibrary_ProxyRestClient.manageConnectionResponseNotSuccess_and_Raise(const aResource: string; p_response: IMVCRESTResponse);
+var
+  v_CODE: string;
+  v_Message: string;
+  v_AditionalInfo: string;
+begin
+  v_AditionalInfo := 'HTTP ERROR: ' + p_response.StatusCode.ToString + sLineBreak +
+                     'HTTP ERROR MESSAGE: ' + p_response.StatusText + sLineBreak +
+                     'ERROR MESSAGE: ' + p_response.Content;
+  //
+  if aResource = '/login' then
+  begin
+    v_code := 'ML00002'; // User or password incorrect
+    v_Message := MyLibrary_.UserStrings.getString(v_code);
+  end
+  else
+  begin
+    v_code := 'ML00003'; // Something went wrong
+    v_Message := MyLibrary_.UserStrings.getString(v_code);
+  end;
+  //
+  raise EMyLibrary_Connection.create(v_CODE, v_Message, v_AditionalInfo);
 end;
 
 function TMyLibrary_ProxyRestClient.ProxiedPost(const aResource, aBody, aContentType: string): IMVCRESTResponse;
 begin
   try
     result := fRestClient.Post(aResource, aBody, aContentType);
+    if not Result.Success then
+      manageConnectionResponseNotSuccess_and_Raise(aResource, result);
   except
     on E: Exception do
     begin
-{          ShowMessage(
-      'HTTP ERROR: ' + vResponse.StatusCode.ToString + sLineBreak +
-      'HTTP ERROR MESSAGE: ' + vResponse.StatusText + sLineBreak +
-      'ERROR MESSAGE: ' + vResponse.Content);
-    Exit;
-      changeToNextServer;  }
+      manageConnectionException_and_Raise(aResource, e);
+      changeToNextServer;
       raise;
     end;
   end;
@@ -114,7 +155,7 @@ end;
 
 constructor EMyLibrary_Connection.create(const p_CODE, p_Message, p_AditionalInfo: string);
 begin
-
+  inherited create('('+p_code+') ' + p_message + '... ' + sLineBreak + sLineBreak + p_AditionalInfo);
 end;
 
 end.

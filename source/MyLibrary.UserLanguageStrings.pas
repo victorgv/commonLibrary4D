@@ -72,6 +72,8 @@ begin
     AddItemToDictionary('ML00001','Login successful','');
     AddItemToDictionary('ML00002','User or password incorrect','');
     AddItemToDictionary('ML00003','Something went wrong','');
+    AddItemToDictionary('ML00004','Username required','');
+    AddItemToDictionary('ML00005','Password required','');
   end;
 
 

@@ -10,7 +10,7 @@ implementation
 uses
   System.Classes, FireDAC.Comp.Client, System.SysUtils;
 
-procedure TMyLubrary_doCreate_Pooled_Connection(const p_SERVER, p_DATABASE, p_USERNAME, p_PASSWORD: String; p_PORT, p_NumMaxPool: Integer); // PostgerSql conn
+procedure TMyLibrary_doCreate_Pooled_Connection(const p_SERVER, p_DATABASE, p_USERNAME, p_PASSWORD: String; p_PORT, p_NumMaxPool: Integer); // PostgerSql conn
 var
   LParams: TStringList;
 begin

@@ -96,6 +96,11 @@ begin
     LA_INFO.TextSettings.FontColor := TAlphaColorRec.Red;
     LA_INFO.Text := MyLibrary_.UserStrings.getString('ML00005');
     ed_password.SetFocus;
+  end
+  else
+  begin
+    result := true;
+    LA_INFO.Text := '';
   end;
 
 

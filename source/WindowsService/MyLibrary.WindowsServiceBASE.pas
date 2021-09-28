@@ -40,6 +40,7 @@ implementation
 
 // -----------------------------------------------------------------------------
 
+
 constructor TMyLibrary_ServiceImplementationBASE.Create(p_Service: TService);
 begin
   inherited create(TRUE);
@@ -167,6 +168,7 @@ end;
 
 procedure TMyLibrary_ServiceImplementationBASE.Initializations;
 begin
+
 
 end;
 

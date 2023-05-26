@@ -25,7 +25,6 @@ type
   private
     fDictionary: TDictionary<String, String>;
   protected
-    procedure AddOrSetValue(const Key, Value: String);
     function GetKey(const Key: String): String;
     procedure LoadFromFile(const FileName: String);
   public
@@ -34,10 +33,10 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    procedure AddOrSetValue(const Key, Value: String);
     function TryGetValue(const Key: String; out Value: String): Boolean;
     function ContainsKey(const Key: String): Boolean;
     function GetCount: Integer;
-
   end;
 
 type
@@ -149,7 +148,7 @@ begin
 
   // (1) TRY to load "application.properties"
   try
-    LoadFromFile('application.propertiesZZ');
+    LoadFromFile('application.properties');
   except
     on e: EInOutError  do
     begin

@@ -1,4 +1,4 @@
-unit CL4d.WindowsService;
+unit CL4D.WindowsService;
 
 interface
 

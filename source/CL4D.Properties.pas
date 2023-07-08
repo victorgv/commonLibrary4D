@@ -8,6 +8,8 @@ uses
   Data.DB;
 
 
+Type
+  ETCL4DProperties_KeyNotFound = class(Exception);
 
 type
    ICL4DProperties = interface
@@ -99,7 +101,14 @@ end;
 
 function TCL4DPropertiesBase.GetKey(const Key: String): String;
 begin
-  Result := fDictionary[Key];
+  try
+    Result := fDictionary[Key];
+  except
+    on E: EListError do
+    begin
+      raise ETCL4DProperties_KeyNotFound.Create('Key Not Found');
+    end;
+  end;
 end;
 
 procedure TCL4DPropertiesBase.LoadFromFile(const FileName: String);
@@ -148,7 +157,7 @@ begin
 
   // (1) TRY to load "application.properties"
   try
-    LoadFromFile('application.properties');
+    LoadFromFile(ExtractFileDir(ParamStr(0))+'\application.properties');
   except
     on e: EInOutError  do
     begin
@@ -156,6 +165,8 @@ begin
         Raise;
     end;
   end;
+
+  // (2) [TO-DO] Other kind of config file format...
 
 
 
